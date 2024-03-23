@@ -10,7 +10,7 @@ export default {
     elt = hook.el;
     hook.map = null;
     const loader = new Loader({
-      apiKey: 'AIzaSyDpsyPPpcGHKBgy8wtLwMgirm_fTjrBrTg',
+      
       version: "weekly"
     });
     loader
