@@ -17,7 +17,13 @@ defmodule NotjazzfestWeb.Router do
   scope "/", NotjazzfestWeb do
     pipe_through :browser
 
-    get "/", PageController, :home
+
+    live "/", TargetLive.Index, :index
+    live "/targets/new", TargetLive.Index, :new
+    live "/targets/:id/edit", TargetLive.Index, :edit
+
+    live "/targets/:id", TargetLive.Show, :show
+    live "/targets/:id/show/edit", TargetLive.Show, :edit
   end
 
   # Other scopes may use custom stacks.
