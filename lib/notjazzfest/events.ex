@@ -6,7 +6,7 @@ defmodule Notjazzfest.Events do
   import Ecto.Query, warn: false
   alias Notjazzfest.Repo
 
-  alias NotJazzfest.Events.Event
+  alias Notjazzfest.Events.Event
 
   @doc """
   Returns the list of events.

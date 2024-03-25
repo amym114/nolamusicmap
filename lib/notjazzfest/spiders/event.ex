@@ -1,4 +1,4 @@
-defmodule NotJazzfest.Events.Event do
+defmodule Notjazzfest.Events.Event do
   use Ecto.Schema
   import Ecto.Changeset
 

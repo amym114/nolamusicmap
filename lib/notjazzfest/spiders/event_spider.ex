@@ -1,4 +1,4 @@
-defmodule NotJazzfest.Spider.EventSpider do
+defmodule Notjazzfest.Spider.EventSpider do
   use Crawly.Spider
   require Logger
 
