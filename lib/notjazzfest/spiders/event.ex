@@ -5,24 +5,17 @@ defmodule Notjazzfest.Events.Event do
   schema "events" do
     field :title, :string
     field :date, :utc_datetime
-    field :venue, :string
+    field :wwoz_venue_id, :string
     field :description, :string
+    field :wwoz_id, :integer
     timestamps()
   end
 
-    @spec changeset(
-            {map(), map()}
-            | %{
-                :__struct__ => atom() | %{:__changeset__ => map(), optional(any()) => any()},
-                optional(atom()) => any()
-              },
-            :invalid | %{optional(:__struct__) => none(), optional(atom() | binary()) => any()}
-          ) :: Ecto.Changeset.t()
     @doc false
     def changeset(target, attrs) do
       target
       |> cast(attrs, [:title, :date, :venue, :description])
-      |> validate_required([:title, :date, :venue])
+      |> validate_required([:title, :date, :wwoz_venue_id])
     end
 
 end
