@@ -6,8 +6,9 @@ defmodule NotjazzfestWeb.TargetLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, socket
-    |> assign(:targets, Targets.list_targets())}
+    {:ok,
+     socket
+     |> assign(:targets, Targets.list_targets())}
   end
 
   @impl true

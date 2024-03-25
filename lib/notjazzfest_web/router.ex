@@ -17,7 +17,6 @@ defmodule NotjazzfestWeb.Router do
   scope "/", NotjazzfestWeb do
     pipe_through :browser
 
-
     live "/", TargetLive.Index, :index
     live "/targets/new", TargetLive.Index, :new
     live "/targets/:id/edit", TargetLive.Index, :edit

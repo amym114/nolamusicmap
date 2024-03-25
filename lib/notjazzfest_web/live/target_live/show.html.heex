@@ -16,7 +16,12 @@
 
 <.back navigate={~p"/targets"}>Back to targets</.back>
 
-<.modal :if={@live_action == :edit} id="target-modal" show on_cancel={JS.patch(~p"/targets/#{@target}")}>
+<.modal
+  :if={@live_action == :edit}
+  id="target-modal"
+  show
+  on_cancel={JS.patch(~p"/targets/#{@target}")}
+>
   <.live_component
     module={NotjazzfestWeb.TargetLive.FormComponent}
     id={@target.id}

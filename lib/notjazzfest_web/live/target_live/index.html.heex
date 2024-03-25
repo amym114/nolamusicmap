@@ -5,9 +5,11 @@
   </:actions>
 </.header>
 
-<div id="googleMap" class="w-full h-[600px] bg-slate-100 border-2" 
- phx-hook="GMaps" 
- phx-update="ignore"
- data-targets={Jason.encode!(@targets)}
- >
+<div
+  id="googleMap"
+  class="w-full h-[600px] bg-slate-100 border-2"
+  phx-hook="GMaps"
+  phx-update="ignore"
+  data-targets={Jason.encode!(@targets)}
+>
 </div>
