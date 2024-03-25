@@ -1,4 +1,4 @@
-defmodule NotJazzfest.Repo.Migrations.CreateVenues do
+defmodule Notjazzfest.Repo.Migrations.CreateVenues do
   use Ecto.Migration
 
   def change do
