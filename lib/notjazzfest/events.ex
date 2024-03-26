@@ -2,7 +2,7 @@ defmodule Notjazzfest.Events do
   @moduledoc """
   The Events context.
   """
-
+  require Logger
   import Ecto.Query, warn: false
   alias Notjazzfest.Repo
 
@@ -50,6 +50,9 @@ defmodule Notjazzfest.Events do
 
   """
   def create_event(attrs \\ %{}) do
+    Logger.info("CREATING EVENT")
+    Logger.info(attrs)
+
     %Event{}
     |> Event.changeset(attrs)
     |> Repo.insert()
@@ -73,7 +76,7 @@ defmodule Notjazzfest.Events do
     |> Repo.update()
   end
 
-   # @doc """
+  # @doc """
   # Inserts or Updates a event.
 
   # ## Examples
@@ -86,11 +89,18 @@ defmodule Notjazzfest.Events do
 
   # """
   def insert_or_update_event(%Event{} = event, attrs) do
-    event
+    IO.inspect(Event, label: "EVENT:")
+    IO.inspect(attrs, label: "ATTRS:")
+
+    case Repo.get(Event, attrs.wwoz_id) do
+      # Event not found, we build one
+      nil -> %Event{wwoz_id: attrs.wwoz_id}
+      # Event exists, let's use it
+      event -> event
+    end
     |> Event.changeset(attrs)
     |> Repo.insert_or_update()
   end
-
 
   # @doc """
   # Deletes a event.

@@ -2,19 +2,18 @@ defmodule Notjazzfest.Spider.EventSpider do
   use Crawly.Spider
   require Logger
 
+  alias Notjazzfest.Events
+
   @impl Crawly.Spider
   def base_url(), do: "https://www.wwoz.org/"
 
   @impl Crawly.Spider
   def init() do
-    Logger.warning("HEY GIRL INIT")
-    [start_urls: ["https://www.wwoz.org/calendar/livewire-music?date=2024-04-26"]]
+    [start_urls: build_start_urls(~D[2024-03-26])]
   end
 
   @impl Crawly.Spider
   def parse_item(response) do
-    Logger.warning("HEY GIRL PARSIN'")
-
     # Parse response body to document
     {:ok, document} = Floki.parse_document(response.body)
 
@@ -32,7 +31,7 @@ defmodule Notjazzfest.Spider.EventSpider do
             |> Floki.find(".row")
             |> Enum.map(fn row ->
               %{
-                name:
+                title:
                   String.trim(
                     Floki.find(row, "p.truncate")
                     |> Floki.text()
@@ -41,29 +40,55 @@ defmodule Notjazzfest.Spider.EventSpider do
                   String.trim(
                     Floki.find(row, "p:last-of-type")
                     |> Floki.text()
-                  )
+                  ),
+                wwoz_id:
+                  extract_last_text(Floki.find(row, "p.truncate a") |> Floki.attribute("href"))
               }
             end),
-          venue_url: Floki.find(venue, ".panel-heading .panel-title a") |> Floki.attribute("href")
+          wwoz_venue_id:
+            extract_last_text(
+              Floki.find(venue, ".panel-heading .panel-title a")
+              |> Floki.attribute("href")
+            )
         }
       end)
 
     all_shows
     |> Enum.map(fn show_venue ->
-      Logger.info("\n\nShow Venue: ")
-      Logger.warning(inspect(show_venue.venue_name))
-      Logger.info(inspect(show_venue.venue_url))
-
       show_venue.events
       |> Enum.map(fn show ->
-        Logger.info(inspect(show.name))
-        Logger.info(inspect(show.date_and_time))
+        # Create a new Event struct with the extracted data
+        event = %Events.Event{
+          title: show.title,
+          date: show.date_and_time,
+          wwoz_venue_id: show_venue.wwoz_venue_id,
+          wwoz_id: show.wwoz_id
+        }
+
+        # Call insert_or_update_event with the event struct and attributes
+        Events.insert_or_update_event(event, %{
+          title: show.title,
+          date: show.date_and_time,
+          wwoz_venue_id: show_venue.wwoz_venue_id,
+          wwoz_id: show.wwoz_id
+        })
       end)
     end)
 
-    # Logger.warning(inspect(all_shows))
-    # %Crawly.ParsedItem{}
     %Crawly.ParsedItem{items: all_shows, requests: []}
-    # %Crawly.ParsedItem{items: all_shows, requests: next_requests}
+  end
+
+  defp build_start_urls(today) do
+    date_range = Date.range(today, Date.add(today, 3)) |> Enum.to_list()
+
+    Enum.map(date_range, fn date ->
+      "https://www.wwoz.org/calendar/livewire-music?" <> Date.to_string(date)
+    end)
+  end
+
+  defp extract_last_text(text) do
+    text = Enum.join(text)
+    extracted_text = Regex.run(~r/^\/[^\/]*\/(.*)$/, text, capture: :all_but_first)
+    Enum.join(extracted_text)
   end
 end
