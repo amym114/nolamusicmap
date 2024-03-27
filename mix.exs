@@ -49,6 +49,7 @@ defmodule Notjazzfest.MixProject do
        app: false,
        compile: false,
        depth: 1},
+      {:httpoison, "~> 1.7", override: true},
       {:swoosh, "~> 1.5"},
       {:finch, "~> 0.13"},
       {:telemetry_metrics, "~> 0.6"},
@@ -57,8 +58,9 @@ defmodule Notjazzfest.MixProject do
       {:jason, "~> 1.2"},
       {:dns_cluster, "~> 0.1.1"},
       {:bandit, "~> 1.2"},
+      {:geocoder, "~> 2.0"},
+      {:floki, ">= 0.33.0"},
       {:crawly, "~> 0.16.0"},
-      {:floki, ">= 0.33.0"}
     ]
   end
 

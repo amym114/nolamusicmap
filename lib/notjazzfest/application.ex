@@ -14,10 +14,12 @@ defmodule Notjazzfest.Application do
       {Phoenix.PubSub, name: Notjazzfest.PubSub},
       # Start the Finch HTTP client for sending emails
       {Finch, name: Notjazzfest.Finch},
+      {Geocoder.Supervisor, worker_config: [http_client: :hackney,  http_client_opts: []]},
       # Start a worker by calling: Notjazzfest.Worker.start_link(arg)
       # {Notjazzfest.Worker, arg},
       # Start to serve requests, typically the last entry
       NotjazzfestWeb.Endpoint
+
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
