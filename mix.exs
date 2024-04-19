@@ -60,7 +60,8 @@ defmodule Notjazzfest.MixProject do
       {:bandit, "~> 1.2"},
       {:geocoder, "~> 2.0"},
       {:floki, ">= 0.33.0"},
-      {:crawly, "~> 0.16.0"},
+      {:crawly, "~> 0.17.0"},
+      {:logger_file_backend, "~> 0.0.10"}
     ]
   end
 
