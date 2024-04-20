@@ -147,6 +147,9 @@ defmodule Notjazzfest.Spider.VenueSpider do
         })
 
 
+        {:ok, coordinates} = Geocoder.call(show_venue.street_address <> ", " <> show_venue.city <> ", " <> show_venue.state <> " " <> show_venue.zip)
+        IO.inspect(coordinates, label: "COORDINATES:::")
+
         end)
 
     %{items: venues, requests: []}
