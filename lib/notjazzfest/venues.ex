@@ -73,6 +73,32 @@ defmodule Notjazzfest.Venues do
     |> Repo.update()
   end
 
+  # @doc """
+  # Inserts or Updates a venue.
+
+  # ## Examples
+
+  #     iex> insert_or_update_venue(venue, %{field: new_value})
+  #     {:ok, %Event{}}
+
+  #     iex> insert_or_update_venue(venue, %{field: bad_value})
+  #     {:error, %Ecto.Changeset{}}
+
+  # """
+  def insert_or_update_venue(%Venue{} = venue, attrs) do
+    IO.inspect(Venue, label: "Venue:")
+    IO.inspect(attrs, label: "ATTRS:")
+
+    case Repo.get(Venue, attrs.wwoz_venue_id) do
+      # Venue not found, we build one
+      nil -> %Venue{wwoz_venue_id: attrs.wwoz_venue_id}
+      # Venue exists, let's use it
+      venue -> venue
+    end
+    |> Venue.changeset(attrs)
+    |> Repo.insert_or_update()
+  end
+
   @doc """
   Deletes a venue.
 

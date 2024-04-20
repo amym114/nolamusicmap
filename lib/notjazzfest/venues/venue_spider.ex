@@ -2,6 +2,7 @@ defmodule Notjazzfest.Spider.VenueSpider do
   use Crawly.Spider
   require Logger
 
+  alias Notjazzfest.Venues
   alias Notjazzfest.Events
 
   @impl Crawly.Spider
@@ -32,7 +33,7 @@ defmodule Notjazzfest.Spider.VenueSpider do
       |> Floki.find(".panel")
       |> Enum.map(fn venue ->
         %{
-          venue_name:
+          name:
             String.trim(Floki.find(venue, ".panel-heading .panel-title a") |> Floki.text()),
           venue_url:
             Floki.find(venue, ".panel-heading .panel-title a") |> Floki.attribute("href"),
@@ -95,17 +96,18 @@ defmodule Notjazzfest.Spider.VenueSpider do
     %{items: all_shows, requests: requests}
   end
 
-  defp parse_venue_page(document, _url) do
+  defp parse_venue_page(document, url) do
     venues =
       [
         %{
-          venue_name:
+          wwoz_venue_id: extract_last_text(url),
+          name:
             String.trim(
               document
               |> Floki.find(".page-title")
               |> Floki.text()
             ),
-          address:
+          street_address:
             document
             |> Floki.find(".thoroughfare")
             |> Floki.text(),
@@ -122,7 +124,30 @@ defmodule Notjazzfest.Spider.VenueSpider do
             |> Floki.find(".postal-code")
             |> Floki.text()
         }
+
       ]
+
+      venues
+      |> Enum.map(fn show_venue ->
+
+        venue = %Venues.Venue{
+          wwoz_venue_id: show_venue.wwoz_venue_id,
+          name: show_venue.name,
+          street_address: show_venue.street_address,
+          city: show_venue.city,
+          state: show_venue.state
+        }
+
+        Venues.insert_or_update_venue(venue, %{
+          wwoz_venue_id: show_venue.wwoz_venue_id,
+          name: show_venue.name,
+          street_address: show_venue.street_address,
+          city: show_venue.city,
+          state: show_venue.state
+        })
+
+
+        end)
 
     %{items: venues, requests: []}
   end
@@ -135,9 +160,13 @@ defmodule Notjazzfest.Spider.VenueSpider do
     end)
   end
 
-  defp extract_last_text(text) do
+  defp extract_last_text(text) when is_list(text) do
     text = Enum.join(text)
-    extracted_text = Regex.run(~r/^\/[^\/]*\/(.*)$/, text, capture: :all_but_first)
-    Enum.join(extracted_text)
+    extract_last_text(text)
+  end
+
+  defp extract_last_text(text) when is_binary(text) do
+    parts = String.split(text, "/")
+    List.last(parts)
   end
 end

@@ -23,7 +23,7 @@ defmodule Notjazzfest.Venues.Venue do
   def changeset(venue, attrs) do
     venue
     |> cast(attrs, [
-      :wwoz_id,
+      :wwoz_venue_id,
       :name,
       :description,
       :street_address,
@@ -35,16 +35,8 @@ defmodule Notjazzfest.Venues.Venue do
       :email
     ])
     |> validate_required([
-      :wwoz_id,
-      :name,
-      :description,
-      :street_address,
-      :city,
-      :state,
-      :zip,
-      :website,
-      :phone,
-      :email
+      :wwoz_venue_id,
+      :name
     ])
   end
 end
