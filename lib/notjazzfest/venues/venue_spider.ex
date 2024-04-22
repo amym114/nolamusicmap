@@ -22,8 +22,6 @@ defmodule Notjazzfest.Spider.VenueSpider do
       false -> parse_show_list(document, response.request_url)
       true -> parse_venue_page(document, response.request_url)
     end
-
-    # %Crawly.ParsedItem{items: all_shows, requests: []}
   end
 
   defp parse_show_list(document, _url) do
@@ -33,8 +31,7 @@ defmodule Notjazzfest.Spider.VenueSpider do
       |> Floki.find(".panel")
       |> Enum.map(fn venue ->
         %{
-          name:
-            String.trim(Floki.find(venue, ".panel-heading .panel-title a") |> Floki.text()),
+          name: String.trim(Floki.find(venue, ".panel-heading .panel-title a") |> Floki.text()),
           venue_url:
             Floki.find(venue, ".panel-heading .panel-title a") |> Floki.attribute("href"),
           events:
@@ -122,35 +119,58 @@ defmodule Notjazzfest.Spider.VenueSpider do
           zip:
             document
             |> Floki.find(".postal-code")
+            |> Floki.text(),
+          website:
+            document
+            |> Floki.find(".field-name-field-url")
+            |> Floki.find(".field-items")
+            |> Floki.find(".field-item")
+            |> Floki.find("a")
+            |> Floki.attribute("href"),
+          email:
+            document
+            |> Floki.find(".field-name-field-email")
+            |> Floki.find(".field-items")
+            |> Floki.find(".field-item")
+            |> Floki.find("a")
+            |> Floki.text(),
+          phone:
+            document
+            |> Floki.find(".field-type-telephone")
+            |> Floki.find(".field-items")
+            |> Floki.find(".field-item")
+            |> Floki.find("a")
             |> Floki.text()
         }
 
       ]
 
-      venues
-      |> Enum.map(fn show_venue ->
+    venues
+    |> Enum.map(fn show_venue ->
+      venue = %Venues.Venue{
+        wwoz_venue_id: "",
+        name: "",
+        street_address: "",
+        city: "",
+        state: "",
+        zip: "",
+        website: "",
+        email: "",
+        phone: ""
+      }
 
-        venue = %Venues.Venue{
-          wwoz_venue_id: show_venue.wwoz_venue_id,
-          name: show_venue.name,
-          street_address: show_venue.street_address,
-          city: show_venue.city,
-          state: show_venue.state
-        }
-
-        Venues.insert_or_update_venue(venue, %{
-          wwoz_venue_id: show_venue.wwoz_venue_id,
-          name: show_venue.name,
-          street_address: show_venue.street_address,
-          city: show_venue.city,
-          state: show_venue.state
-        })
-
-
-        {:ok, coordinates} = Geocoder.call(show_venue.street_address <> ", " <> show_venue.city <> ", " <> show_venue.state <> " " <> show_venue.zip)
-        IO.inspect(coordinates, label: "COORDINATES:::")
-
-        end)
+      Venues.insert_or_update_venue(venue, %{
+        wwoz_venue_id: show_venue.wwoz_venue_id,
+        name: show_venue.name,
+        street_address: show_venue.street_address,
+        city: show_venue.city,
+        state: show_venue.state,
+        zip: show_venue.zip,
+        website: List.to_string(show_venue.website),
+        email: show_venue.email,
+        phone: show_venue.phone
+      })
+    end)
 
     %{items: venues, requests: []}
   end

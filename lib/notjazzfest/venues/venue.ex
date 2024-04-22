@@ -15,6 +15,8 @@ defmodule Notjazzfest.Venues.Venue do
     field :website, :string
     field :phone, :string
     field :email, :string
+    field :lat, :float
+    field :long, :float
 
     timestamps(type: :utc_datetime)
   end
@@ -32,7 +34,9 @@ defmodule Notjazzfest.Venues.Venue do
       :zip,
       :website,
       :phone,
-      :email
+      :email,
+      :lat,
+      :long
     ])
     |> validate_required([
       :wwoz_venue_id,

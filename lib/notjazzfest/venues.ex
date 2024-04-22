@@ -86,14 +86,20 @@ defmodule Notjazzfest.Venues do
 
   # """
   def insert_or_update_venue(%Venue{} = venue, attrs) do
-    IO.inspect(Venue, label: "Venue:")
-    IO.inspect(attrs, label: "ATTRS:")
-
     case Repo.get(Venue, attrs.wwoz_venue_id) do
       # Venue not found, we build one
-      nil -> %Venue{wwoz_venue_id: attrs.wwoz_venue_id}
+      nil ->
+        IO.puts("VENUE NOT FOUND")
+        %Venue{
+          lat: geocode_location(attrs).lat,
+          long: geocode_location(attrs).lon,
+          wwoz_venue_id: attrs.wwoz_venue_id
+        }
+
       # Venue exists, let's use it
-      venue -> venue
+      venue ->
+        IO.puts("VENUE FOUND")
+        venue
     end
     |> Venue.changeset(attrs)
     |> Repo.insert_or_update()
@@ -126,5 +132,15 @@ defmodule Notjazzfest.Venues do
   """
   def change_venue(%Venue{} = venue, attrs \\ %{}) do
     Venue.changeset(venue, attrs)
+  end
+
+  def geocode_location(attrs) do
+    {:ok, coordinates} =
+      Geocoder.call(
+        attrs.street_address <>
+          ", " <> attrs.city <> ", " <> attrs.state
+      )
+
+    coordinates
   end
 end
