@@ -90,6 +90,7 @@ defmodule Notjazzfest.Venues do
       # Venue not found, we build one
       nil ->
         IO.puts("VENUE NOT FOUND")
+
         %Venue{
           lat: geocode_location(attrs).lat,
           long: geocode_location(attrs).lon,

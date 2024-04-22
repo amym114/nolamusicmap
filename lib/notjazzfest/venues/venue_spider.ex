@@ -142,7 +142,6 @@ defmodule Notjazzfest.Spider.VenueSpider do
             |> Floki.find("a")
             |> Floki.text()
         }
-
       ]
 
     venues
