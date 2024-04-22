@@ -89,8 +89,6 @@ defmodule Notjazzfest.Venues do
     case Repo.get(Venue, attrs.wwoz_venue_id) do
       # Venue not found, we build one
       nil ->
-        IO.puts("VENUE NOT FOUND")
-
         %Venue{
           lat: geocode_location(attrs).lat,
           long: geocode_location(attrs).lon,
@@ -99,7 +97,6 @@ defmodule Notjazzfest.Venues do
 
       # Venue exists, let's use it
       venue ->
-        IO.puts("VENUE FOUND")
         venue
     end
     |> Venue.changeset(attrs)
