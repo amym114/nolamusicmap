@@ -9,7 +9,7 @@ defmodule Notjazzfest.Spider.EventSpider do
 
   @impl Crawly.Spider
   def init() do
-    [start_urls: build_start_urls(~D[2024-03-26])]
+    [start_urls: build_start_urls(Date.utc_today())]
   end
 
   @impl Crawly.Spider

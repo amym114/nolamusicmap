@@ -19,7 +19,7 @@ defmodule Notjazzfest.MixProject do
   def application do
     [
       mod: {Notjazzfest.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :httpoison]
     ]
   end
 
@@ -49,6 +49,7 @@ defmodule Notjazzfest.MixProject do
        app: false,
        compile: false,
        depth: 1},
+      {:httpoison, "~> 2.2"},
       {:swoosh, "~> 1.5"},
       {:finch, "~> 0.13"},
       {:telemetry_metrics, "~> 0.6"},
@@ -57,8 +58,11 @@ defmodule Notjazzfest.MixProject do
       {:jason, "~> 1.2"},
       {:dns_cluster, "~> 0.1.1"},
       {:bandit, "~> 1.2"},
-      {:crawly, "~> 0.16.0"},
-      {:floki, ">= 0.33.0"}
+      {:geocoder, "~> 2.0"},
+      {:hackney, "~> 1.18"},
+      {:floki, ">= 0.33.0"},
+      {:crawly, "~> 0.17.0"},
+      {:logger_file_backend, "~> 0.0.10"}
     ]
   end
 

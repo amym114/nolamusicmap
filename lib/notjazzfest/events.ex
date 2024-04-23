@@ -89,9 +89,6 @@ defmodule Notjazzfest.Events do
 
   # """
   def insert_or_update_event(%Event{} = event, attrs) do
-    IO.inspect(Event, label: "EVENT:")
-    IO.inspect(attrs, label: "ATTRS:")
-
     case Repo.get(Event, attrs.wwoz_id) do
       # Event not found, we build one
       nil -> %Event{wwoz_id: attrs.wwoz_id}
