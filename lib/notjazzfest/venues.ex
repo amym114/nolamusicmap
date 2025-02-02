@@ -35,7 +35,7 @@ defmodule Notjazzfest.Venues do
       ** (Ecto.NoResultsError)
 
   """
-  def get_venue!(id), do: Repo.get!(Venue, id)
+  def get_venue!(unique_id), do: Repo.get!(Venue, unique_id)
 
   @doc """
   Creates a venue.

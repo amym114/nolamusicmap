@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  database:
+    # === KEEP IT SIMPLE
+    container_name: db-notjazzfest
+    image: postgres
+    # the next line only if you have an ARM64 architecture (i.e. M1-3 Macs)
+    # platform: linux/arm64
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      # default: /var/lib/postgresql/data 
+      # better in a subfolder for volume mounts
+      # see <https://hub.docker.com/_/postgres>
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      # if you're using git don't forget to gitignore
+      - ./.postgres:/var/lib/postgresql/data
